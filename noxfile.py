@@ -22,8 +22,14 @@ def ruff(session: nox.Session) -> None:
 def ruff_full(session: nox.Session) -> None:
     """Run ruff and generate a JUnit report file"""
     session.install("ruff")
-    with open("ruff.junit.xml", "wb") as f:
-        session.run("ruff", "check", "--quiet", "--format=junit", "python/", stdout=f)
+    session.run(
+        "ruff",
+        "check",
+        "--quiet",
+        "--output-format=junit",
+        "--output-file=ruff.junit.xml",
+        "python/",
+    )
 
 
 @nox.session
