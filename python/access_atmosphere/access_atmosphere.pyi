@@ -16,21 +16,18 @@ class AtmoParameters:
 
         Dimensioned as (`num_points`, `num_freq`).
         """
-        ...
     @property
     def tb_up(self) -> NDArray[np.float32]:
         """Upwelling TB, in K.
 
         Dimensioned as (`num_points`, `num_freq`).
         """
-        ...
     @property
     def tb_down(self) -> NDArray[np.float32]:
         """Downwelling TB, in K.
 
         Dimensioned as (`num_points`, `num_freq`).
         """
-        ...
 
 def compute_rtm(
     pressure: NDArray[np.float32],
@@ -88,4 +85,3 @@ def compute_rtm(
     The number of worker threads is controlled by `num_threads`. It must be a
     positive integer, or `None` to automatically choose the number of threads.
     """
-    ...
