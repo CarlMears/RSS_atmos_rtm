@@ -14,11 +14,11 @@ name = "access_atmosphere"
 log = "0.4.20"
 ndarray = "0.15.6"
 num-complex = "0.4.4"
-numpy = "0.19.0"
-pyo3 = {version = "0.19.2", features = ["extension-module"]}
-pyo3-log = "0.8.3"
-rayon = "1.7.0"
-smallvec = "1.11.0"
+numpy = "0.20.0"
+pyo3 = {version = "0.20.0", features = ["extension-module"]}
+pyo3-log = "0.9.0"
+rayon = "1.8.0"
+smallvec = "1.11.1"
 
 [dev-dependencies]
 approx = "0.5.1"
