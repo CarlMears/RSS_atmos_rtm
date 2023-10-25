@@ -19,7 +19,7 @@ def ruff(session: nox.Session) -> None:
 
 
 @nox.session
-def ruff_full(session: nox.Session) -> None:
+def ruff_junit(session: nox.Session) -> None:
     """Run ruff and generate a JUnit report file"""
     session.install("ruff")
     session.run(
