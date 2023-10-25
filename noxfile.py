@@ -1,14 +1,14 @@
 import nox
 
 # By default just run these basic lint jobs
-nox.options.sessions = ["black", "ruff", "mypy"]
+nox.options.sessions = ["ruff", "mypy", "ruff_format"]
 
 
 @nox.session
-def black(session: nox.Session) -> None:
-    """Check if black needs to be run"""
-    session.install("black")
-    session.run("black", "--check", "--diff", "python/")
+def ruff_format(session: nox.Session) -> None:
+    """Check if reformatting is needed"""
+    session.install("ruff")
+    session.run("ruff", "format", "--diff", "python/")
 
 
 @nox.session
@@ -19,7 +19,7 @@ def ruff(session: nox.Session) -> None:
 
 
 @nox.session
-def ruff_full(session: nox.Session) -> None:
+def ruff_junit(session: nox.Session) -> None:
     """Run ruff and generate a JUnit report file"""
     session.install("ruff")
     session.run(
