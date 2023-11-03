@@ -142,15 +142,16 @@ build-windows:
     - echo -e "section_start:$(date +%s):apt-get\r\e[0KInstalling dependencies"
     - export LANG="C.UTF-8"
     - apt-get --quiet update
-    - apt-get --quiet --yes --no-install-recommends install python3-venv gcc-mingw-w64-x86-64
+    - apt-get --quiet --yes --no-install-recommends install python3-venv
     - python3 -m venv --upgrade-deps venv
     - source ./venv/bin/activate
     - pip install maturin
-    - rustup target add x86_64-pc-windows-gnu
+    - rustup target add x86_64-pc-windows-msvc
+    - rustup component add llvm-tools
     - echo -e "section_end:$(date +%s):apt-get\r\e[0K"
     - rustc --version && python3 --version
   script:
-    - maturin build --release --target x86_64-pc-windows-gnu --features abi3
+    - maturin build --release --target x86_64-pc-windows-msvc --features abi3
     - cp -t . target/wheels/*.whl
   artifacts:
     name: "$CI_JOB_NAME-$CI_COMMIT_SHORT_SHA"
