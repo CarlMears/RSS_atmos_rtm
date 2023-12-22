@@ -53,6 +53,7 @@ def mypy_full(session: nox.Session) -> None:
         "--pretty",
         "--show-error-context",
         "--junit-xml=mypy.junit.xml",
+        "--junit-format=per_file",
         "--cobertura-xml-report=.",
         "--lineprecision-report=.",
         "python/",
