@@ -10,7 +10,7 @@ variables:
 lint:
   stage: test
   needs: []
-  image: "python:3.9-slim"
+  image: "python:3.10-slim"
   before_script:
     - python --version
     - pip install --upgrade pip
@@ -28,7 +28,7 @@ mypy:
   stage: test
   needs: []
   allow_failure: true
-  image: "python:3.9-slim"
+  image: "python:3.10-slim"
   before_script:
     - python --version
     - pip install --upgrade pip
@@ -50,13 +50,13 @@ mypy:
 stubtest:
   stage: test
   needs: [build-manylinux]
-  image: "python:3.9-slim"
+  image: "python:3.10-slim"
   before_script:
     - python --version
     - pip install --upgrade pip
     - pip install nox
   script:
-    - nox -s stubtest -- access_atmosphere-*-cp39-cp39-*.whl
+    - nox -s stubtest -- access_atmosphere-*-cp310-cp310-*.whl
 
 rustfmt:
   stage: test
@@ -106,7 +106,7 @@ build-manylinux:
     - cargo fetch --locked
     - maturin sdist
     - maturin build --release --features abi3
-    - maturin build --release -i "python3.9" -i "python3.10" -i "python3.11" -i "python3.12"
+    - maturin build --release -i "python3.10" -i "python3.11" -i "python3.12"
     - cp -t . target/wheels/*.tar.gz target/wheels/*.whl
   artifacts:
     name: "$CI_JOB_NAME-$CI_COMMIT_SHORT_SHA"
@@ -128,7 +128,7 @@ build-musllinux:
   script:
     - cargo fetch --locked
     - maturin build --release --features abi3
-    - maturin build --release -i "python3.9" -i "python3.10" -i "python3.11" -i "python3.12"
+    - maturin build --release -i "python3.10" -i "python3.11" -i "python3.12"
     - cp target/wheels/*.whl .
   artifacts:
     name: "$CI_JOB_NAME-$CI_COMMIT_SHORT_SHA"
@@ -192,13 +192,13 @@ publish-package:
 api-documentation:
   stage: test
   needs: [build-manylinux]
-  image: "python:3.9-slim"
+  image: "python:3.10-slim"
   before_script:
     - python --version
     - pip install --upgrade pip
     - pip install nox
   script:
-    - nox -s pdoc -- access_atmosphere-*-cp39-cp39-manylinux*.whl
+    - nox -s pdoc -- access_atmosphere-*-cp310-cp310-manylinux*.whl
   artifacts:
     paths:
       - public
@@ -208,7 +208,7 @@ pages:
   needs: [api-documentation]
   rules:
     - if: $CI_COMMIT_REF_NAME == $CI_DEFAULT_BRANCH
-  image: "python:3.9-slim"
+  image: "python:3.10-slim"
   script:
     - echo "deploying documentation"
   artifacts:
@@ -223,7 +223,7 @@ dependency-musllinux-wheels:
   when: manual
   parallel:
     matrix:
-      - PYTHON: [python3.9, python3.10, python3.11, python3.12]
+      - PYTHON: [python3.10, python3.11, python3.12]
   image: quay.io/pypa/musllinux_1_2_x86_64:latest
   before_script:
     - apk add hdf5-dev netcdf-dev

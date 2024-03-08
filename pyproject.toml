@@ -4,7 +4,7 @@ requires = ["maturin>=1.0,<2.0"]
 
 [project]
 name = "access-atmosphere"
-requires-python = ">=3.9"
+requires-python = ">=3.10"
 version = "0.3.1"
 
 dependencies = [
@@ -35,7 +35,7 @@ module = "netCDF4"
 ignore_missing_imports = true
 module = "cdsapi"
 
-[tool.ruff]
+[tool.ruff.lint]
 ignore = [
   "ANN101", # Missing type annotation for `self` in method
   "UP007", # Use `X | Y` for type annotations
@@ -59,7 +59,7 @@ select = [
   "NPY", # numpy-specific rules
 ]
 
-[tool.ruff.per-file-ignores]
+[tool.ruff.lint.per-file-ignores]
 # "Missing docstring in public module", "public class", "public method", and
 # "public function" conflicts with PYI021, "Docstrings should not be included in
 # stubs".
