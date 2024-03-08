@@ -24,7 +24,7 @@ smallvec = "1.11.1"
 approx = "0.5.1"
 
 [features]
-abi3 = ["pyo3/abi3-py39", "generate-import-lib"]
+abi3 = ["pyo3/abi3-py310", "generate-import-lib"]
 generate-import-lib = ["pyo3/generate-import-lib"]
 
 [profile.dev]

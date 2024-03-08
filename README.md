@@ -40,7 +40,7 @@ pip install access-atmosphere `
   --trusted-host gitlab.remss.com
 ```
 
-Wheels are built for Linux and Windows for x86-64 for Python 3.9 and newer. The
+Wheels are built for Linux and Windows for x86-64 for Python 3.10 and newer. The
 Linux wheels are built in two flavors: `manylinux_2_28`, which is for most
 common Linux distributions using the GNU C library 2.28 or greater, and
 `musllinux_1_2`, which is for Linux distributions using the musl C library 1.2
@@ -113,7 +113,6 @@ combination):
 
 | Python tag | Description |
 | --- | --- |
-| `cp39` | CPython 3.9 |
 | `cp310` | CPython 3.10 |
 | `cp311` | CPython 3.11 |
 | `cp312` | CPython 3.12 |
@@ -129,9 +128,9 @@ combination):
 | `manylinux_2_28_x86_64` | x86_64 Linux with glibc 2.28 and later |
 | `musllinux_1_2_x86_64` | x86_64 Linux with musl 1.2 and later |
 
-Following the [NumPy policy of supported Python
-versions](https://numpy.org/neps/nep-0029-deprecation_policy.html#drop-schedule),
-Python 3.9 is the minimum version used.
+Following the [Scientific Python ecosystem policy of supported Python
+versions](https://scientific-python.org/specs/spec-0000/), Python 3.10 is the
+minimum version used.
 
 The [`manylinux_2_28`](https://github.com/pypa/manylinux) policy ensures that it
 is compatible with [most Linux
