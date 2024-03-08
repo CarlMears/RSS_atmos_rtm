@@ -82,7 +82,7 @@ cargo-audit:
         - Cargo.lock
   image: rust:1.70-bookworm
   variables:
-    CARGO_AUDIT_VERSION: "v0.18.3"
+    CARGO_AUDIT_VERSION: "v0.20.0"
   before_script:
     - curl -LO "https://github.com/rustsec/rustsec/releases/download/cargo-audit%2F${CARGO_AUDIT_VERSION}/cargo-audit-x86_64-unknown-linux-musl-${CARGO_AUDIT_VERSION}.tgz"
     - mkdir -p "${CARGO_HOME}/bin"
