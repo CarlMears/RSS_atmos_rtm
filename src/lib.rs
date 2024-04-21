@@ -1,7 +1,3 @@
-#![warn(rust_2018_idioms)]
-#![warn(missing_debug_implementations)]
-#![warn(missing_docs)]
-
 //! RTM computation
 //!
 //! NOTE: this module is intended for the interface between Rust and Python. The
