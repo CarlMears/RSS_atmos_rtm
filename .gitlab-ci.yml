@@ -61,7 +61,7 @@ stubtest:
 rustfmt:
   stage: test
   needs: []
-  image: rust:1.70-bookworm
+  image: rust:1.74-bookworm
   before_script:
     - rustup component add rustfmt
   script:
@@ -70,7 +70,7 @@ rustfmt:
 rust-tests:
   stage: test
   needs: []
-  image: rust:1.70-bookworm
+  image: rust:1.74-bookworm
   script:
     - cargo test --locked
 
@@ -80,7 +80,7 @@ cargo-audit:
   rules:
     - changes:
         - Cargo.lock
-  image: rust:1.70-bookworm
+  image: rust:1.74-bookworm
   variables:
     CARGO_AUDIT_VERSION: "v0.20.0"
   before_script:
@@ -95,7 +95,7 @@ build-manylinux:
   stage: build
   image: quay.io/pypa/manylinux_2_28_x86_64:latest
   before_script:
-    - curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- --default-toolchain 1.70 --profile minimal -y
+    - curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- --default-toolchain 1.74 --profile minimal -y
     - source $HOME/.cargo/env
     - python3.11 -m venv --upgrade-deps .venv
     - source .venv/bin/activate
@@ -118,7 +118,7 @@ build-musllinux:
   stage: build
   image: quay.io/pypa/musllinux_1_2_x86_64:latest
   before_script:
-    - curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- --default-toolchain 1.70 --profile minimal -y
+    - curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- --default-toolchain 1.74 --profile minimal -y
     - source $HOME/.cargo/env
     - python3.11 -m venv --upgrade-deps .venv
     - source .venv/bin/activate
@@ -137,7 +137,7 @@ build-musllinux:
 
 build-windows:
   stage: build
-  image: rust:1.70-bookworm
+  image: rust:1.74-bookworm
   before_script:
     - echo -e "section_start:$(date +%s):apt-get\r\e[0KInstalling dependencies"
     - export LANG="C.UTF-8"

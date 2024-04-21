@@ -3,7 +3,7 @@ name = "access-atmosphere"
 version = "0.3.1"
 
 edition = "2021"
-rust-version = "1.70"
+rust-version = "1.74"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 [lib]
@@ -14,11 +14,11 @@ name = "access_atmosphere"
 log = "0.4.21"
 ndarray = "0.15.6"
 num-complex = "0.4.5"
-numpy = "0.20.0"
-pyo3 = {version = "0.20.3", features = ["extension-module"]}
-pyo3-log = "0.9.0"
-rayon = "1.9.0"
-smallvec = "1.13.1"
+numpy = "0.21.0"
+pyo3 = { version = "0.21.2", features = ["extension-module"] }
+pyo3-log = "0.10.0"
+rayon = "1.10.0"
+smallvec = "1.13.2"
 
 [dev-dependencies]
 approx = "0.5.1"
@@ -32,3 +32,8 @@ opt-level = 1
 
 [profile.release]
 codegen-units = 1
+
+[lints.rust]
+rust_2018_idioms = "warn"
+missing_debug_implementations = "warn"
+missing_docs = "warn"
