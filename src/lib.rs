@@ -19,6 +19,7 @@ use std::{
 use error::RtmError;
 use log::{debug, info};
 use ndarray::{Array2, ArrayView1, Axis};
+use numpy::prelude::*;
 use numpy::{PyArray2, PyReadonlyArray1, PyReadonlyArray2, ToPyArray};
 use pyo3::exceptions::PyValueError;
 use pyo3::prelude::*;
