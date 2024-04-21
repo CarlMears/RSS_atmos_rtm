@@ -15,7 +15,7 @@ log = "0.4.21"
 ndarray = "0.15.6"
 num-complex = "0.4.5"
 numpy = "0.21.0"
-pyo3 = { version = "0.21.2", features = ["extension-module", "gil-refs"] }
+pyo3 = { version = "0.21.2", features = ["extension-module"] }
 pyo3-log = "0.10.0"
 rayon = "1.10.0"
 smallvec = "1.13.2"

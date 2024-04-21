@@ -48,18 +48,18 @@ struct AtmoParameters {
 #[pymethods]
 impl AtmoParameters {
     #[getter]
-    fn get_tran<'py>(&self, py: Python<'py>) -> &'py PyArray2<f32> {
-        self.tran.to_pyarray(py)
+    fn tran<'py>(&self, py: Python<'py>) -> Bound<'py, PyArray2<f32>> {
+        self.tran.to_pyarray_bound(py)
     }
 
     #[getter]
-    fn get_tb_up<'py>(&self, py: Python<'py>) -> &'py PyArray2<f32> {
-        self.tb_up.to_pyarray(py)
+    fn tb_up<'py>(&self, py: Python<'py>) -> Bound<'py, PyArray2<f32>> {
+        self.tb_up.to_pyarray_bound(py)
     }
 
     #[getter]
-    fn get_tb_down<'py>(&self, py: Python<'py>) -> &'py PyArray2<f32> {
-        self.tb_down.to_pyarray(py)
+    fn tb_down<'py>(&self, py: Python<'py>) -> Bound<'py, PyArray2<f32>> {
+        self.tb_down.to_pyarray_bound(py)
     }
 }
 
@@ -290,7 +290,7 @@ fn compute_rtm(
 
 /// A Python module implemented in Rust.
 #[pymodule]
-fn access_atmosphere(_py: Python<'_>, m: &PyModule) -> PyResult<()> {
+fn access_atmosphere(m: &Bound<'_, PyModule>) -> PyResult<()> {
     pyo3_log::init();
 
     m.add_function(wrap_pyfunction!(compute_rtm, m)?)?;
