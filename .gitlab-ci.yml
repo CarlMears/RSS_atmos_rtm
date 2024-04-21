@@ -97,8 +97,8 @@ build-manylinux:
   before_script:
     - curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- --default-toolchain 1.70 --profile minimal -y
     - source $HOME/.cargo/env
-    - python3.11 -m venv --upgrade-deps venv
-    - source venv/bin/activate
+    - python3.11 -m venv --upgrade-deps .venv
+    - source .venv/bin/activate
     - pip install maturin
     - rustup --version
     - maturin --version
@@ -120,8 +120,8 @@ build-musllinux:
   before_script:
     - curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- --default-toolchain 1.70 --profile minimal -y
     - source $HOME/.cargo/env
-    - python3.11 -m venv --upgrade-deps venv
-    - source venv/bin/activate
+    - python3.11 -m venv --upgrade-deps .venv
+    - source .venv/bin/activate
     - pip install maturin
     - rustup --version
     - maturin --version
@@ -143,8 +143,8 @@ build-windows:
     - export LANG="C.UTF-8"
     - apt-get --quiet update
     - apt-get --quiet --yes --no-install-recommends install python3-venv
-    - python3 -m venv --upgrade-deps venv
-    - source ./venv/bin/activate
+    - python3 -m venv --upgrade-deps .venv
+    - source .venv/bin/activate
     - pip install maturin
     - rustup target add x86_64-pc-windows-msvc
     - rustup component add llvm-tools
