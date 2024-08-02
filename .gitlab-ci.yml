@@ -97,10 +97,10 @@ build-manylinux:
   before_script:
     - curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- --default-toolchain 1.74 --profile minimal -y
     - source $HOME/.cargo/env
-    - python3.11 -m venv --upgrade-deps .venv
+    - uv venv .venv
     - source .venv/bin/activate
-    - pip install maturin
-    - rustup --version
+    - uv pip install maturin
+    - rustc --version
     - maturin --version
   script:
     - cargo fetch --locked
@@ -120,10 +120,10 @@ build-musllinux:
   before_script:
     - curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- --default-toolchain 1.74 --profile minimal -y
     - source $HOME/.cargo/env
-    - python3.11 -m venv --upgrade-deps .venv
+    - uv venv .venv
     - source .venv/bin/activate
-    - pip install maturin
-    - rustup --version
+    - uv pip install maturin
+    - rustc --version
     - maturin --version
   script:
     - cargo fetch --locked
@@ -140,17 +140,14 @@ build-windows:
   image: rust:1.74-bookworm
   before_script:
     - echo -e "section_start:$(date +%s):apt-get\r\e[0KInstalling dependencies"
-    - export LANG="C.UTF-8"
-    - apt-get --quiet update
-    - apt-get --quiet --yes --no-install-recommends install python3-venv
-    - python3 -m venv --upgrade-deps .venv
-    - source .venv/bin/activate
-    - pip install maturin
+    - curl -L --proto '=https' --tlsv1.2 -sSf https://raw.githubusercontent.com/cargo-bins/cargo-binstall/main/install-from-binstall-release.sh | bash
+    - cargo binstall --no-confirm maturin
     - rustup target add x86_64-pc-windows-msvc
     - rustup component add llvm-tools
     - echo -e "section_end:$(date +%s):apt-get\r\e[0K"
     - rustc --version && python3 --version
   script:
+    - cargo fetch --locked
     - maturin build --release --target x86_64-pc-windows-msvc --features abi3
     - cp -t . target/wheels/*.whl
   artifacts:

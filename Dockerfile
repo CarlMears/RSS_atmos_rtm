@@ -28,15 +28,14 @@ RUN maturin build --release -i "python3.11"
 
 FROM docker.io/library/python:3.11-slim
 
-RUN python3 -m venv --upgrade-deps /root/venv
-
 WORKDIR /root
 COPY --from=build \
     /io/target/wheels/*.whl \
     /root/
 
-RUN /root/venv/bin/pip3 install ./access_atmosphere-*-cp311-cp311-manylinux*.whl
-ENTRYPOINT [ "/root/venv/bin/python3" ]
+RUN --mount=type=bind,from=ghcr.io/astral-sh/uv:latest,source=/uv,target=/bin/uv \
+    uv pip install --system --no-cache ./access_atmosphere-*-cp311-cp311-manylinux*.whl
+ENTRYPOINT [ "/usr/local/bin/python3" ]
 
 ARG version
 ARG revision
