@@ -10,13 +10,15 @@ variables:
 lint:
   stage: test
   needs: []
-  image: "python:3.10-slim"
+  image: "ghcr.io/astral-sh/uv:python3.10-bookworm-slim"
+  variables:
+    NOX_DEFAULT_VENV_BACKEND: uv
   before_script:
     - python --version
-    - pip install --upgrade pip
-    - pip install nox
+    - uv --version
+    - uvx nox --version
   script:
-    - nox -s ruff_junit ruff_format
+    - uvx nox -s ruff_junit ruff_format
   artifacts:
     paths:
       - ruff.junit.xml
@@ -28,13 +30,15 @@ mypy:
   stage: test
   needs: []
   allow_failure: true
-  image: "python:3.10-slim"
+  image: "ghcr.io/astral-sh/uv:python3.10-bookworm-slim"
+  variables:
+    NOX_DEFAULT_VENV_BACKEND: uv
   before_script:
     - python --version
-    - pip install --upgrade pip
-    - pip install nox
+    - uv --version
+    - uvx nox --version
   script:
-    - nox -s mypy_full
+    - uvx nox -s mypy_full
   artifacts:
     paths:
       - mypy.junit.xml
@@ -50,13 +54,15 @@ mypy:
 stubtest:
   stage: test
   needs: [build-manylinux]
-  image: "python:3.10-slim"
+  image: "ghcr.io/astral-sh/uv:python3.10-bookworm-slim"
+  variables:
+    NOX_DEFAULT_VENV_BACKEND: uv
   before_script:
     - python --version
-    - pip install --upgrade pip
-    - pip install nox
+    - uv --version
+    - uvx nox --version
   script:
-    - nox -s stubtest -- access_atmosphere-*-cp310-cp310-*.whl
+    - uvx nox -s stubtest -- access_atmosphere-*-cp310-cp310-*.whl
 
 rustfmt:
   stage: test
@@ -97,16 +103,15 @@ build-manylinux:
   before_script:
     - curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- --default-toolchain 1.74 --profile minimal -y
     - source $HOME/.cargo/env
-    - uv venv .venv
-    - source .venv/bin/activate
-    - uv pip install maturin
     - rustc --version
-    - maturin --version
+    - uv --version
+    - uvx maturin --version
+    - uvx maturin list-python
   script:
     - cargo fetch --locked
-    - maturin sdist
-    - maturin build --release --features abi3
-    - maturin build --release -i "python3.10" -i "python3.11" -i "python3.12" -i "python3.13"
+    - uvx maturin sdist
+    - uvx maturin build --release --features abi3
+    - uvx maturin build --release -i "python3.10" -i "python3.11" -i "python3.12" -i "python3.13"
     - cp -t . target/wheels/*.tar.gz target/wheels/*.whl
   artifacts:
     name: "$CI_JOB_NAME-$CI_COMMIT_SHORT_SHA"
@@ -120,15 +125,14 @@ build-musllinux:
   before_script:
     - curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- --default-toolchain 1.74 --profile minimal -y
     - source $HOME/.cargo/env
-    - uv venv .venv
-    - source .venv/bin/activate
-    - uv pip install maturin
     - rustc --version
-    - maturin --version
+    - uv --version
+    - uvx maturin --version
+    - uvx maturin list-python
   script:
     - cargo fetch --locked
-    - maturin build --release --features abi3
-    - maturin build --release -i "python3.10" -i "python3.11" -i "python3.12" -i "python3.13"
+    - uvx maturin build --release --features abi3
+    - uvx maturin build --release -i "python3.10" -i "python3.11" -i "python3.12" -i "python3.13"
     - cp target/wheels/*.whl .
   artifacts:
     name: "$CI_JOB_NAME-$CI_COMMIT_SHORT_SHA"
@@ -157,45 +161,52 @@ build-windows:
 
 import-linux:
   stage: test
-  image: python:3.11-slim
+  image: "ghcr.io/astral-sh/uv:python3.11-bookworm-slim"
   needs: [build-manylinux]
+  variables:
+    GIT_STRATEGY: empty
   before_script:
     - python --version
-    - pip install --upgrade pip
+    - uv --version
   script:
-    - pip install --progress-bar=off ./access_atmosphere-*-cp311-cp311-manylinux*.whl
+    - uv venv
+    - source .venv/bin/activate
+    - uv pip install ./access_atmosphere-*-cp311-cp311-manylinux*.whl
     - python -c 'import access_atmosphere'
 
 publish-package:
   stage: deploy
-  image: python:3.11-slim
+  image: "ghcr.io/astral-sh/uv:python3.11-bookworm-slim"
   needs: ["build-windows", "build-manylinux", "build-musllinux"]
   # Once a package version is uploaded to a PyPI registry, it cannot be updated.
   # So to ensure no conflicts, only tagged releases are published.
   only:
     - tags
+  variables:
+    GIT_STRATEGY: empty
   before_script:
     - python --version
-    - pip install --upgrade pip
-    - pip install twine
+    - uv --version
   script:
     - >
-      TWINE_USERNAME=gitlab-ci-token
-      TWINE_PASSWORD=${CI_JOB_TOKEN}
-      python -m twine upload
-      --repository-url ${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/pypi
+      uv publish
+      --publish-url ${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/pypi
+      --username gitlab-ci-token
+      --password ${CI_JOB_TOKEN}
       *.tar.gz *manylinux*.whl *musllinux*.whl *win*.whl
 
 api-documentation:
   stage: test
   needs: [build-manylinux]
-  image: "python:3.10-slim"
+  image: "ghcr.io/astral-sh/uv:python3.10-bookworm-slim"
+  variables:
+    NOX_DEFAULT_VENV_BACKEND: uv
   before_script:
     - python --version
-    - pip install --upgrade pip
-    - pip install nox
+    - uv --version
+    - uvx nox --version
   script:
-    - nox -s pdoc -- access_atmosphere-*-cp310-cp310-manylinux*.whl
+    - uvx nox -s pdoc -- access_atmosphere-*-cp310-cp310-manylinux*.whl
   artifacts:
     paths:
       - public

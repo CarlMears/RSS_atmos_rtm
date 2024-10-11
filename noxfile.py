@@ -114,4 +114,6 @@ def pdoc(session: nox.Session) -> None:
         session.log("Rebuilding the access_atmosphere package locally")
         session.install(".")
     session.install("pdoc")
+    # Needed for cdsapi?
+    session.install("setuptools")
     session.run("pdoc", "access_atmosphere", "--output-directory", "public")
