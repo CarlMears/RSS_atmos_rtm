@@ -163,6 +163,8 @@ import-linux:
   stage: test
   image: "ghcr.io/astral-sh/uv:python3.11-bookworm-slim"
   needs: [build-manylinux]
+  variables:
+    GIT_STRATEGY: empty
   before_script:
     - python --version
     - uv --version
@@ -180,6 +182,8 @@ publish-package:
   # So to ensure no conflicts, only tagged releases are published.
   only:
     - tags
+  variables:
+    GIT_STRATEGY: empty
   before_script:
     - python --version
     - uv --version
