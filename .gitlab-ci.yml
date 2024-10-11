@@ -103,16 +103,15 @@ build-manylinux:
   before_script:
     - curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- --default-toolchain 1.74 --profile minimal -y
     - source $HOME/.cargo/env
-    - uv venv .venv
-    - source .venv/bin/activate
-    - uv pip install maturin
     - rustc --version
-    - maturin --version
+    - uv --version
+    - uvx maturin --version
+    - uvx maturin list-python
   script:
     - cargo fetch --locked
-    - maturin sdist
-    - maturin build --release --features abi3
-    - maturin build --release -i "python3.10" -i "python3.11" -i "python3.12" -i "python3.13"
+    - uvx maturin sdist
+    - uvx maturin build --release --features abi3
+    - uvx maturin build --release -i "python3.10" -i "python3.11" -i "python3.12" -i "python3.13"
     - cp -t . target/wheels/*.tar.gz target/wheels/*.whl
   artifacts:
     name: "$CI_JOB_NAME-$CI_COMMIT_SHORT_SHA"
@@ -126,15 +125,14 @@ build-musllinux:
   before_script:
     - curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- --default-toolchain 1.74 --profile minimal -y
     - source $HOME/.cargo/env
-    - uv venv .venv
-    - source .venv/bin/activate
-    - uv pip install maturin
     - rustc --version
-    - maturin --version
+    - uv --version
+    - uvx maturin --version
+    - uvx maturin list-python
   script:
     - cargo fetch --locked
-    - maturin build --release --features abi3
-    - maturin build --release -i "python3.10" -i "python3.11" -i "python3.12" -i "python3.13"
+    - uvx maturin build --release --features abi3
+    - uvx maturin build --release -i "python3.10" -i "python3.11" -i "python3.12" -i "python3.13"
     - cp target/wheels/*.whl .
   artifacts:
     name: "$CI_JOB_NAME-$CI_COMMIT_SHORT_SHA"
