@@ -11,9 +11,9 @@ crate-type = ["cdylib"]
 name = "access_atmosphere"
 
 [dependencies]
-log = "0.4.21"
+log = "0.4.22"
 ndarray = "0.15.6"
-num-complex = "0.4.5"
+num-complex = "0.4.6"
 numpy = "0.21.0"
 pyo3 = { version = "0.21.2", features = ["extension-module"] }
 pyo3-log = "0.10.0"
