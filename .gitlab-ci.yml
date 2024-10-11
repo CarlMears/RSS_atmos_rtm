@@ -106,7 +106,7 @@ build-manylinux:
     - cargo fetch --locked
     - maturin sdist
     - maturin build --release --features abi3
-    - maturin build --release -i "python3.10" -i "python3.11" -i "python3.12"
+    - maturin build --release -i "python3.10" -i "python3.11" -i "python3.12" -i "python3.13"
     - cp -t . target/wheels/*.tar.gz target/wheels/*.whl
   artifacts:
     name: "$CI_JOB_NAME-$CI_COMMIT_SHORT_SHA"
@@ -128,7 +128,7 @@ build-musllinux:
   script:
     - cargo fetch --locked
     - maturin build --release --features abi3
-    - maturin build --release -i "python3.10" -i "python3.11" -i "python3.12"
+    - maturin build --release -i "python3.10" -i "python3.11" -i "python3.12" -i "python3.13"
     - cp target/wheels/*.whl .
   artifacts:
     name: "$CI_JOB_NAME-$CI_COMMIT_SHORT_SHA"
@@ -220,7 +220,7 @@ dependency-musllinux-wheels:
   when: manual
   parallel:
     matrix:
-      - PYTHON: [python3.10, python3.11, python3.12]
+      - PYTHON: [python3.10, python3.11, python3.12, python3.13]
   image: quay.io/pypa/musllinux_1_2_x86_64:latest
   before_script:
     - apk add hdf5-dev netcdf-dev

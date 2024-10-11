@@ -116,6 +116,7 @@ combination):
 | `cp310` | CPython 3.10 |
 | `cp311` | CPython 3.11 |
 | `cp312` | CPython 3.12 |
+| `cp313` | CPython 3.13 |
 
 | Abi tag | Description |
 | --- | --- |
