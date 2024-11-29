@@ -49,17 +49,17 @@ struct AtmoParameters {
 impl AtmoParameters {
     #[getter]
     fn tran<'py>(&self, py: Python<'py>) -> Bound<'py, PyArray2<f32>> {
-        self.tran.to_pyarray_bound(py)
+        self.tran.to_pyarray(py)
     }
 
     #[getter]
     fn tb_up<'py>(&self, py: Python<'py>) -> Bound<'py, PyArray2<f32>> {
-        self.tb_up.to_pyarray_bound(py)
+        self.tb_up.to_pyarray(py)
     }
 
     #[getter]
     fn tb_down<'py>(&self, py: Python<'py>) -> Bound<'py, PyArray2<f32>> {
-        self.tb_down.to_pyarray_bound(py)
+        self.tb_down.to_pyarray(py)
     }
 }
 
