@@ -88,8 +88,11 @@ class RtmDailyData:
 
         time_units = "hours since 1900-01-01 00:00:00Z"
         data_times = num2date(self.time, time_units)
-        time_start = min(data_times).isoformat(" ", "seconds")
-        time_end = max(data_times).isoformat(" ", "seconds")
+        if isinstance(data_times, np.ndarray):
+            time_start = min(data_times).isoformat(" ", "seconds")
+            time_end = max(data_times).isoformat(" ", "seconds")
+        else:
+            raise Exception("num2date() did not return an array")
 
         with Dataset(rtm_output, "w") as f:
             # ----------
