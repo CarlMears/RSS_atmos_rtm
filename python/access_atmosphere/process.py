@@ -24,8 +24,12 @@ import numpy as np
 from netCDF4 import Dataset, getlibversion, num2date
 from numpy.typing import NDArray
 
-from . import era5
+import sys
+sys.path.append('/mnt/m/Obs4MIPs/atmospheric-rtm/python/access_atmosphere')
+import era5
+#from . import era5
 from .access_atmosphere import compute_rtm
+
 
 # Reference frequencies (in GHz) to use
 REF_FREQ: NDArray[np.float32] = np.array(
@@ -37,6 +41,11 @@ REF_EIA: NDArray[np.float32] = np.array(
     [40.0, 53.0, 53.0, 53.0, 53.0, 53.0, 53.0], np.float32
 )
 
+REF_FREQ_SSMI = np.array([19.35, 22.235, 37.0, 85.5], np.float32)
+REF_EIA_SSMI = np.array([53.1, 53.1, 53.1, 53.1], np.float32)
+
+REF_FREQ_MSU = np.array([53.74,53.74,53.74,53.74,53.74,53.74], np.float32)
+REF_EIA_MSU =  np.array([ 0.00,10.71,21.51,32.51,43.91,56.19], np.float32)
 
 @dataclass
 class RtmDailyData:
@@ -237,7 +246,9 @@ def combine_rtm(hourly: Sequence[RtmDailyData]) -> RtmDailyData:
 
 
 def run_rtm(
-    era5_data: era5.Era5DailyData, workers: Optional[int] = None
+    era5_data: era5.Era5DailyData,
+    satellite: Optional[str] = 'AMSR2',
+    workers: Optional[int] = None
 ) -> RtmDailyData:
     """Run the RTM on ERA5 daily data."""
     logging.info("Running RTM over all data")
@@ -248,6 +259,19 @@ def run_rtm(
     shape_4d = era5_data.temperature.shape
     num_time, num_lat, num_lon, num_levels = shape_4d[0:4]
     num_points = num_time * num_lat * num_lon
+    match satellite:
+        case 'AMSR2':
+            freq = REF_FREQ
+            eia = REF_EIA
+        case 'SSMI':
+            freq = REF_FREQ_SSMI
+            eia = REF_EIA_SSMI
+        case 'MSU':
+            freq = REF_FREQ_MSU
+            eia = REF_EIA_MSU
+        case _:
+            raise Exception(f"Unsupported satellite: {satellite}")
+    
     atmo_results = compute_rtm(
         era5_data.levels,
         np.reshape(era5_data.temperature, (num_points, num_levels)),
@@ -258,8 +282,8 @@ def run_rtm(
         np.ravel(era5_data.surface_height),
         np.ravel(era5_data.surface_dewpoint),
         np.ravel(era5_data.surface_pressure),
-        REF_EIA,
-        REF_FREQ,
+        eia,
+        freq,
         workers,
     )
 
@@ -268,7 +292,8 @@ def run_rtm(
     logging.info(f"Finished RTM in {duration_seconds:0.2f} s")
 
     # Now the output values need to be un-vectorized
-    num_freq = len(REF_FREQ)
+    num_freq = len(freq)
+    
     tran = np.reshape(atmo_results.tran, (num_time, num_lat, num_lon, num_freq))
     tb_up = np.reshape(atmo_results.tb_up, (num_time, num_lat, num_lon, num_freq))
     tb_down = np.reshape(atmo_results.tb_down, (num_time, num_lat, num_lon, num_freq))
@@ -277,8 +302,8 @@ def run_rtm(
         era5_data.lats,
         era5_data.lons,
         era5_data.time,
-        REF_FREQ,
-        REF_EIA,
+        freq,
+        eia,
         era5_data.columnar_water_vapor,
         era5_data.columnar_cloud_liquid,
         tran,
@@ -293,6 +318,7 @@ def convert_all(
     rtm_output: Path,
     time_indices: Optional[Sequence[int]],
     one_pass: bool,
+    satellite: Optional[str] = 'AMSR2',
     workers: Optional[int] = None,
 ) -> None:
     """Read the ERA5 profile/surface files and run the RTM and write its output."""
@@ -306,7 +332,7 @@ def convert_all(
         era5_data = era5.read_era5_data(
             era5_surface_input, era5_levels_input, all_time_indices
         )
-        rtm_data = run_rtm(era5_data, workers)
+        rtm_data = run_rtm(era5_data, satellite, workers)
     else:
         # Read the ERA5 data one hour at a time and process just that much
         hourly_rtm_data = []
@@ -314,7 +340,7 @@ def convert_all(
             era5_data = era5.read_era5_data(
                 era5_surface_input, era5_levels_input, [time_index]
             )
-            hourly_rtm_data.append(run_rtm(era5_data, workers))
+            hourly_rtm_data.append(run_rtm(era5_data, satellite, workers))
 
         # Accumulate all the hourly data together
         rtm_data = combine_rtm(hourly_rtm_data)
@@ -392,7 +418,8 @@ def main() -> None:
         args.rtm_out,
         args.time,
         args.one_pass,
-        workers=args.workers,
+        satellite='AMSR2',
+        workers=args.workers 
     )
 
 
