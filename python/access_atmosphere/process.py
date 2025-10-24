@@ -28,7 +28,9 @@ import sys
 sys.path.append('/mnt/m/Obs4MIPs/atmospheric-rtm/python/access_atmosphere')
 import era5
 #from . import era5
-from .access_atmosphere import compute_rtm
+#from access_atmosphere import compute_rtm
+from access_atmosphere import compute_rtm
+#from access_atmosphere import compute_rtm
 
 
 # Reference frequencies (in GHz) to use
