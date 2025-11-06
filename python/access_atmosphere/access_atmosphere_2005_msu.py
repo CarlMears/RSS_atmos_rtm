@@ -1,13 +1,9 @@
-
-
 import logging
-import sys
-from collections.abc import Sequence
+
 from dataclasses import dataclass
-from datetime import datetime, timezone, date, timedelta
+from datetime import datetime, date, timedelta
 from pathlib import Path
 from time import perf_counter_ns
-from typing import Optional, Union
 
 import numpy as np
 from netCDF4 import Dataset, getlibversion, num2date
@@ -22,6 +18,8 @@ print(access_atmosphere.__file__)
 
 import access_atmosphere.process 
 print(access_atmosphere.process.__file__)
+
+
 
 
 output_path = Path('/mnt/m/Obs4MIPs/atmospheric-rtm/tbs')

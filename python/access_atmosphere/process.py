@@ -24,12 +24,12 @@ import numpy as np
 from netCDF4 import Dataset, getlibversion, num2date
 from numpy.typing import NDArray
 
-import sys
-sys.path.append('/mnt/m/Obs4MIPs/atmospheric-rtm/python/access_atmosphere')
-import era5
-#from . import era5
+# import sys
+# sys.path.append('/mnt/m/Obs4MIPs/atmospheric-rtm/python/access_atmosphere')
+# import era5
+from . import era5
 #from access_atmosphere import compute_rtm
-from access_atmosphere import compute_rtm
+from .access_atmosphere import compute_rtm
 #from access_atmosphere import compute_rtm
 
 
@@ -349,6 +349,7 @@ def convert_all(
 
     logging.info(f"Writing output data: {rtm_output}")
     rtm_data.write_nc(rtm_output)
+
 
 
 def main() -> None:

@@ -12,6 +12,7 @@ use self::core::{atm_tran, layer_absorption};
 use crate::error::RtmError;
 use smallvec::SmallVec;
 use std::num::NonZeroUsize;
+use log::{info};
 
 /// Input parameters for the RTM that are constant.
 #[derive(Debug)]
@@ -223,9 +224,32 @@ impl RtmInputs {
         let mut tb_up = SmallVec::new();
         let mut tb_down = SmallVec::new();
 
-        for (&freq, &inc) in parameters.frequency.iter().zip(&parameters.incidence) {
-            // Build up total absorption coefficient profile
-            let absorption_profile: SmallVec<[f32; 64]> = (self.surface_index
+        // for (&freq, &inc) in parameters.frequency.iter().zip(&parameters.incidence) {
+        //     // Build up total absorption coefficient profile
+        //     let absorption_profile: SmallVec<[f32; 64]> = (self.surface_index
+        //         ..self.num_levels.get() + 1)
+        //         .map(|level_index| {
+        //             layer_absorption(
+        //                 self.pressure[level_index],
+        //                 self.temperature[level_index],
+        //                 self.vapor_pressure[level_index],
+        //                 self.rho_l[level_index],
+        //                 freq,
+        //             )
+        //         })
+        //         .collect();
+
+        //     let results = atm_tran(
+        //         inc,
+        //         &self.temperature[self.surface_index..],
+        //         &self.height[self.surface_index..],
+        //         &absorption_profile,
+        //     );
+
+
+        let freq: f32 = parameters.frequency[0];
+        // info!("Using fixed frequency: {} GHz", freq);
+        let absorption_profile: SmallVec<[f32; 64]> = (self.surface_index
                 ..self.num_levels.get() + 1)
                 .map(|level_index| {
                     layer_absorption(
@@ -237,6 +261,10 @@ impl RtmInputs {
                     )
                 })
                 .collect();
+
+        for &inc in parameters.incidence.iter(){
+            // Build up total absorption coefficient profile
+            
 
             let results = atm_tran(
                 inc,
